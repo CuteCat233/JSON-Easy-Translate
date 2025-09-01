@@ -14,7 +14,7 @@
 
 用了`JavaFX`和`Gson`
 
-主程序是src里面的`Main.java`
+主类是src里面的`Main.java`
 
 ## 声明
 
