@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 /**
  * Startup class for the application.
- * @author KQ.W
+ * @author CuteCat233
  * @date 2025.09.01
  * @Version 1.0
  */

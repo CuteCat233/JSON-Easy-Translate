@@ -24,6 +24,5 @@ This project uses the following third-party libraries:
 
 - JavaFX (GPL v2 with Classpath Exception): https://openjdk.org/projects/openjfx/
 - Gson (Apache License 2.0): https://github.com/google/gson
-- JUnit Jupiter & Platform (Eclipse Public License 2.0): https://junit.org/
 
 These libraries are used in accordance with their respective licenses.

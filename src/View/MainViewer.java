@@ -1,10 +1,7 @@
 package View;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
-
 import Model.TranslationEntry;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

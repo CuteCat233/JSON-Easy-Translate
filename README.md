@@ -1,11 +1,16 @@
-## Getting Started
+## 这是个标题
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+自用的json对照翻译器。不知道有什么bug反正能用就行。
 
-## Folder Structure
+## 使用方法
 
-The workspace contains two folders by default, where:
+### 简易方法
 
+双击``start.bat``即可
+
+### 困难方法
+
+不难看出这玩意是用VSCODE写的
 - `src`: the folder to maintain sources
 - `lib`: the folder to maintain dependencies
 
