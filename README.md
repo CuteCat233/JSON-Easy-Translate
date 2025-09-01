@@ -6,18 +6,23 @@
 
 ### 简易方法
 
-双击``start.bat``即可
+双击`start.bat`即可
 
 ### 困难方法
 
-不难看出这玩意是用VSCODE写的
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+不难看出这玩意是用`Java`写的
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+用了`JavaFX`和`Gson`
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+主程序是src里面的`Main.java`
 
-## Dependency Management
+## 声明
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+虽然License里写了但再声明一下
+
+此项目使用以下第三方库:
+
+- JavaFX (GPL v2 with Classpath Exception): https://openjdk.org/projects/openjfx/
+- Gson (Apache License 2.0): https://github.com/google/gson
+
+这些库按照各自的许可证使用。

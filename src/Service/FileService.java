@@ -16,7 +16,7 @@ import com.google.gson.stream.JsonReader;
  * A class for file operations.
  * 
  * @version 1.0
- * @author KQ.W
+ * @author CuteCat233
  * @since 2025-09-01
  */
 public class FileService {
