@@ -20,9 +20,18 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-This project uses the following third-party libraries:
+---
 
-- JavaFX (GPL v2 with Classpath Exception): https://openjdk.org/projects/openjfx/
-- Gson (Apache License 2.0): https://github.com/google/gson
+This project includes the following third-party libraries:
 
-These libraries are used in accordance with their respective licenses.
+1. **JavaFX 24.0.2**  
+   License: GNU General Public License v2 with Classpath Exception  
+   Source: https://openjdk.org/projects/openjfx/  
+   Usage: JavaFX is used as a runtime library. No modifications have been made.
+
+2. **Gson 2.12.1 (Google JSON Library)**  
+   License: Apache License 2.0  
+   Source: https://github.com/google/gson  
+   Usage: Gson is used for JSON serialization and deserialization. No modifications have been made.
+
+These libraries are used in accordance with their respective licenses. This project does not redistribute modified versions of these libraries.
