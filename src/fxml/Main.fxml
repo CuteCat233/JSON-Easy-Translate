@@ -22,5 +22,6 @@
          </columnResizePolicy>
       </TableView>
       <CheckBox fx:id="showJsonKey" layoutX="71.0" layoutY="46.0" mnemonicParsing="false" onAction="#displayKey" selected="true" text="显示Json-key" AnchorPane.leftAnchor="71.0" AnchorPane.rightAnchor="632.0" AnchorPane.topAnchor="46.0" />
+      <CheckBox fx:id="showEmptyTr" layoutX="202.0" layoutY="46.0" mnemonicParsing="false" onAction="#displayEmptyTr" text="显示未翻译项" />
    </children>
 </AnchorPane>

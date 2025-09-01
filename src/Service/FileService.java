@@ -3,10 +3,14 @@ package Service;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.LinkedHashMap;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.Strictness;
 import com.google.gson.stream.JsonReader;
 
 /**
@@ -53,7 +57,17 @@ public class FileService {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
         try {
-            JsonReader jr = new JsonReader(new FileReader(file));
+            // 读取整个文件内容为字符串
+            String rawJson = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+
+            // 清理结尾多余的逗号：处理对象结尾的 ",}" 和数组结尾的 ",]"
+            String cleanedJson = rawJson
+                .replaceAll(",\\s*}", "}")
+                .replaceAll(",\\s*]", "]");
+
+            // 使用 JsonReader 包装字符串
+            JsonReader jr = new JsonReader(new StringReader(cleanedJson));
+            jr.setStrictness(Strictness.LENIENT);
             map = gson.fromJson(jr, type);
         } catch (Exception e) {
             e.printStackTrace();

@@ -47,9 +47,14 @@ public class MainViewer {
     @FXML
     private TableColumn<TranslationEntry, String> tranlateColumn;
 
+    @FXML
+    private CheckBox showEmptyTr;
+
     private FileService orfs = new FileService();
 
     private FileService trfs = new FileService();
+
+    private ObservableList<TranslationEntry> fullTableData = FXCollections.observableArrayList();
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
@@ -61,6 +66,7 @@ public class MainViewer {
         assert showJsonKey != null : "fx:id=\"showJsonKey\" was not injected: check your FXML file 'Main.fxml'.";
         assert table != null : "fx:id=\"table\" was not injected: check your FXML file 'Main.fxml'.";
         assert tranlateColumn != null : "fx:id=\"tranlateColumn\" was not injected: check your FXML file 'Main.fxml'.";
+        assert showEmptyTr != null : "fx:id=\"showEmptyTr\" was not injected: check your FXML file 'Main.fxml'.";
 
         keyColumn.setCellValueFactory(cellData -> cellData.getValue().keyProperty());
         originalColumn.setCellValueFactory(cellData -> cellData.getValue().originalProperty());
@@ -108,6 +114,21 @@ public class MainViewer {
                 }
             }
         };
+    }
+
+    @FXML
+    void displayEmptyTr(ActionEvent event) {
+        if (showEmptyTr.isSelected()) {
+            // 筛选翻译为空的项
+            ObservableList<TranslationEntry> filtered = fullTableData.filtered(entry ->
+                entry.translatedProperty().get() == null ||
+                entry.translatedProperty().get().trim().isEmpty()
+            );
+            table.setItems(filtered);
+        } else {
+            // 恢复完整数据
+            table.setItems(fullTableData);
+        }
     }
 
     @FXML
@@ -191,7 +212,6 @@ public class MainViewer {
         if (trfs.getFile() != null) {
             trhm = trfs.getJson();
         }
-        ObservableList<TranslationEntry> entries = FXCollections.observableArrayList();
         if (orhm.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
@@ -203,9 +223,9 @@ public class MainViewer {
         for (String key : orhm.keySet()) {
             String orVal = orhm.getOrDefault(key, null);
             String trVal = trhm.getOrDefault(key, null); // 或用 "" 代替 null
-            entries.add(new TranslationEntry(key, orVal, trVal));
+            fullTableData.add(new TranslationEntry(key, orVal, trVal));
         }
-        table.setItems(entries);
+        table.setItems(fullTableData);
     }
         
 }
