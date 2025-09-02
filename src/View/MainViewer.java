@@ -141,7 +141,7 @@ public class MainViewer {
     void exportFile(ActionEvent event) {
         LinkedHashMap<String, String> exportMap = new LinkedHashMap<>();
 
-        for (TranslationEntry entry : table.getItems()) {
+        for (TranslationEntry entry : fullTableData) {
             String key = entry.keyProperty().get();
             String translated = entry.translatedProperty().get();
 
