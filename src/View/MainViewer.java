@@ -17,6 +17,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import Service.FileService;
+import Setting.SettingControl;
 
 public class MainViewer {
 
@@ -53,6 +54,8 @@ public class MainViewer {
 
     private ObservableList<TranslationEntry> fullTableData = FXCollections.observableArrayList();
 
+    private SettingControl settingControl = new SettingControl();
+
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
         assert exportFileButton != null : "fx:id=\"exportFileButton\" was not injected: check your FXML file 'Main.fxml'.";
@@ -64,6 +67,23 @@ public class MainViewer {
         assert table != null : "fx:id=\"table\" was not injected: check your FXML file 'Main.fxml'.";
         assert tranlateColumn != null : "fx:id=\"tranlateColumn\" was not injected: check your FXML file 'Main.fxml'.";
         assert showEmptyTr != null : "fx:id=\"showEmptyTr\" was not injected: check your FXML file 'Main.fxml'.";
+
+        settingControl.loadSettings();
+
+        if (!settingControl.isJsonKeyDisplay()) {
+            keyColumn.setVisible(false);
+            showJsonKey.setSelected(false);
+        } else {
+            keyColumn.setVisible(true);
+            showJsonKey.setSelected(true);
+        }
+
+        if (!settingControl.isEmptyTranslationDisplay()) {
+            showEmptyTr.setSelected(false);
+        } else {
+            showEmptyTr.setSelected(true);
+            displayEmptyTr(new ActionEvent());
+        }
 
         keyColumn.setCellValueFactory(cellData -> cellData.getValue().keyProperty());
         originalColumn.setCellValueFactory(cellData -> cellData.getValue().originalProperty());
@@ -156,25 +176,46 @@ public class MainViewer {
         exfc.getExtensionFilters().addAll(
             new FileChooser.ExtensionFilter("JSON文件", "*.json")
         );
+        if (settingControl.getOutputPath() != null && !settingControl.getOutputPath().isEmpty()) {
+            File initialDir = new File(settingControl.getOutputPath());
+            if (initialDir.exists() && initialDir.isDirectory()) {
+                exfc.setInitialDirectory(initialDir);
+            }
+        }
+
         File efFile = exfc.showSaveDialog(exportFileButton.getScene().getWindow());
         if (efFile != null) {
+            settingControl.setOutputPath(efFile.getParentFile().getAbsolutePath());
+            settingControl.saveSettings();
             trfs.setFile(efFile);
             trfs.writeJson(exportMap);
         }
+        
     }
 
     @FXML
     void selectFile(ActionEvent event) {
-
+        
         FileChooser orfc = new FileChooser();
         orfc.setTitle("选择文件");
         orfc.getExtensionFilters().addAll(
             new FileChooser.ExtensionFilter("JSON文件", "*.json"),
             new FileChooser.ExtensionFilter("所有文件", "*.*")
         ); 
+        if (settingControl.getLastOpenPath() != null && !settingControl.getLastOpenPath().isEmpty()) {
+            File initialDir = new File(settingControl.getLastOpenPath());
+            if (initialDir.exists() && initialDir.isDirectory()) {
+                orfc.setInitialDirectory(initialDir);
+            }
+        }
+        
         File orFile = orfc.showOpenDialog(selectFileButton.getScene().getWindow());
+
+        // System.out.println(orFile != null ? orFile.getParentFile().getAbsolutePath() : "");
         if (orFile != null) {
             System.out.println(orFile.getAbsolutePath());
+            settingControl.setLastOpenPath(orFile.getParentFile().getAbsolutePath());
+            settingControl.saveSettings();
             orfs.setFile(orFile);
         }
         refreshTable();
@@ -182,19 +223,36 @@ public class MainViewer {
 
     @FXML
     void selectTrFile(ActionEvent event) {
+        if (orfs.getFile() == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("错误");
+            alert.setHeaderText("没有待翻译数据");
+            alert.setContentText("请选择一个有效的待翻译文件。");
+            alert.showAndWait();
+            return;
+        }
         FileChooser trfc = new FileChooser();
         trfc.setTitle("选择文件");
-        
+        File initialDir = new File(settingControl.getLastOpenPath());
+        if (initialDir.exists() && initialDir.isDirectory()) {
+            trfc.setInitialDirectory(initialDir);
+        }
         trfc.getExtensionFilters().addAll(
             new FileChooser.ExtensionFilter("JSON文件", "*.json"),
             new FileChooser.ExtensionFilter("所有文件", "*.*")
         );
         
         File trFile = trfc.showOpenDialog(selectTrFileButton.getScene().getWindow());
+
         if (trFile != null) {
             trfs.setFile(trFile);
+            settingControl.setLastOpenPath(trFile.getParentFile().getAbsolutePath());
+            settingControl.saveSettings();
         }
         refreshTable();
+        if (showEmptyTr.isSelected()) {
+            displayEmptyTr(new ActionEvent());
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -208,14 +266,6 @@ public class MainViewer {
         LinkedHashMap<String, String> trhm = new LinkedHashMap<>();
         if (trfs.getFile() != null) {
             trhm = trfs.getJson();
-        }
-        if (orhm.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("No Original Data");
-            alert.setContentText("Please select a valid original file.");
-            alert.showAndWait();
-            return;
         }
         for (String key : orhm.keySet()) {
             String orVal = orhm.getOrDefault(key, null);
